@@ -31,14 +31,15 @@ app.post('/api/getdetails',async(req,res)=>{
      if(!videoInfo) return new ApiError (404,"video not found");
 
      const formats = videoInfo.formats.filter(item=>item.hasAudio&&item.hasVideo)
-     return res.status(200).json({formats})
+     console.log({url:formats[0]})
+     return res.status(200).json({url:formats[0].url})
   } catch (error) {
     return new ApiError(400,error)
   }
 })
 app.post('/api/download', async (req, res) => {
- try {
   console.log("started");
+ try {
      const { videoUrl,quality } = req.body;
      if(!videoUrl || !quality) return new ApiError(400,"video url and video quality is requred")
      
@@ -47,14 +48,14 @@ app.post('/api/download', async (req, res) => {
 
      const format = ytdl.chooseFormat(videoInfo.formats, quality);
      if(!format) return new ApiError (404,"something went wrong");
-     
-     const videoStream = ytdl.downloadFromInfo(videoInfo, quality);
-     if(!videoStream) return new ApiError(500,"somthing went wrong while streaming video")
+     console.log(format)
+    //  const videoStream = ytdl.downloadFromInfo(videoInfo, quality);
+    //  if(!videoStream) return new ApiError(500,"somthing went wrong while streaming video")
 
      const fileName = `video-${Date.now()}.${format.container}`;
      const filePath = `./downloads/${fileName}`;
 
-     videoStream.pipe(fs.createWriteStream(filePath));
+    //  videoStream.pipe(fs.createWriteStream(filePath));
 
      videoStream.on('end', () => {
        console.log("done in backend");
