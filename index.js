@@ -20,7 +20,7 @@ class ApiError extends Error{
     this.success = false
   }
 }
-app.get("/",(req,res)=>res.send({message:"ok"}))
+app.get("/api",(req,res)=>res.send({message:"ok"}))
 
 app.post('/api/getdetails',async(req,res)=>{
   try {
